@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_10dp"
+    app:cardCornerRadius="@dimen/dimen_20dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_rename_bg">
+
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fileInfo"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_mc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_info"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:text="@string/name"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_15sp" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_info"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:layout_toRightOf="@id/tv_mc"
+            android:text="20210543928.amr"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_15sp" />
+
+        <TextView
+            android:id="@+id/tv_sj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_mc"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:text="@string/time"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_15sp" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_mc"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_toRightOf="@id/tv_sj"
+            android:text="2022/01/01"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_15sp" />
+
+        <TextView
+            android:id="@+id/tv_dx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_sj"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:text="@string/size"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_15sp" />
+
+        <TextView
+            android:id="@+id/tv_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_sj"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_toRightOf="@id/tv_dx"
+            android:text="35.5KB"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_15sp" />
+
+        <TextView
+            android:id="@+id/tv_lj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_dx"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:text="@string/path"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_15sp" />
+
+        <TextView
+            android:id="@+id/tv_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_dx"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_toRightOf="@id/tv_lj"
+            android:text="stgor/path/ed/path/size.amr"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_15sp" />
+
+        <TextView
+            android:id="@+id/tv_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_lj"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/dimen_30dp"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/size_16sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

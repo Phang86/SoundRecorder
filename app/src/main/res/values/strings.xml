@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">我的录音机</string>
+    <string name="delete">删除</string>
+    <string name="rename">重命名</string>
+    <string name="information">查看详情</string>
+    <string name="fileRename">文件重命名</string>
+    <string name="fileInfo">文件详情</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="name">名称：</string>
+    <string name="time">时间：</string>
+    <string name="size">大小：</string>
+    <string name="path">路径：</string>
+</resources>
