@@ -1,15 +1,25 @@
 package com.yyzy.soundrecorder.service;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 
+import com.yyzy.soundrecorder.R;
 import com.yyzy.soundrecorder.entity.AudioEntity;
 import com.yyzy.soundrecorder.util.ContantUtils;
 
@@ -19,6 +29,112 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
     private MediaPlayer mediaPlayer = null;    //音频对象
     private List<AudioEntity> mList;           //播放列表
     private int playPosition = -1;             //记录当前播放位置
+    private RemoteViews remoteView;            //通知自定义的布局view对象
+    private AudioReceiver receiver;
+    private NotificationManager manager;
+    private final int NOTIFY_ID_MUSIC = 101;   //发送通知的id
+
+    private final String PRE_ACTION_PLAY = "com.yyzy.play";
+    private final String PRE_ACTION_CLOSE = "com.yyzy.close";
+    private final String PRE_ACTION_NEXT = "com.yyzy.next";
+    private final String PRE_ACTION_LAST = "com.yyzy.last";
+    private Notification notification;
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initRegisterReceiver();
+        initRemoView();
+        initNotifiaction();
+    }
+
+    //初始化通知栏
+    private void initNotifiaction() {
+        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setSmallIcon(R.mipmap.icon_app_logo)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.icon_app_logo))
+                .setContent(remoteView)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .setPriority(Notification.PRIORITY_HIGH);
+        notification = builder.build();
+    }
+
+    //更新通知栏信息的函数
+    private void updateNotifyAction(int position) {
+        if (mediaPlayer.isPlaying()) {
+            remoteView.setImageViewResource(R.id.ny_iv_play, R.mipmap.red_pause);
+        } else {
+            remoteView.setImageViewResource(R.id.ny_iv_play, R.mipmap.red_play);
+        }
+        remoteView.setTextViewText(R.id.ny_tv_title, mList.get(position).getTitle());
+        remoteView.setTextViewText(R.id.ny_content, mList.get(position).getDuration());
+        manager.notify(NOTIFY_ID_MUSIC, notification);
+    }
+
+    //创建广播接收者
+    class AudioReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            notifyUIControl(action);
+        }
+    }
+
+    private void notifyUIControl(String action) {
+        switch (action) {
+            case PRE_ACTION_PLAY:
+
+                break;
+            case PRE_ACTION_CLOSE:
+
+                break;
+            case PRE_ACTION_NEXT:
+
+                break;
+            case PRE_ACTION_LAST:
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    //注册广播接收者，用于接受用户点击通知栏按钮发出的信息
+    private void initRegisterReceiver() {
+        receiver = new AudioReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(PRE_ACTION_PLAY);
+        filter.addAction(PRE_ACTION_CLOSE);
+        filter.addAction(PRE_ACTION_NEXT);
+        filter.addAction(PRE_ACTION_LAST);
+        registerReceiver(receiver, filter);
+    }
+
+    //设置通知栏的显示效果以及图片的点击事件
+    private void initRemoView() {
+        remoteView = new RemoteViews(getPackageName(), R.layout.notify_audio);
+        PendingIntent playPI = PendingIntent
+                .getBroadcast(this, 1, new Intent(PRE_ACTION_PLAY), PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteView.setOnClickPendingIntent(R.id.ny_iv_play, playPI);
+
+        PendingIntent closePI = PendingIntent
+                .getBroadcast(this, 1, new Intent(PRE_ACTION_CLOSE), PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteView.setOnClickPendingIntent(R.id.ny_iv_close, closePI);
+
+        PendingIntent nextPI = PendingIntent
+                .getBroadcast(this, 1, new Intent(PRE_ACTION_NEXT), PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteView.setOnClickPendingIntent(R.id.ny_iv_next, nextPI);
+
+        PendingIntent lastPI = PendingIntent
+                .getBroadcast(this, 1, new Intent(PRE_ACTION_LAST), PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteView.setOnClickPendingIntent(R.id.ny_iv_last, lastPI);
+
+    }
 
     public interface OnPlayChangeListener {
         public void playChange(int changePosition);
@@ -87,6 +203,7 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
             notifyActivityRefreshUI();
             setFlagProgress(true);
             updateProgress();
+            updateNotifyAction(position);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,26 +220,28 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
             mediaPlayer.start();
             audioEntity.setPlay(true);
         }
-
         notifyActivityRefreshUI();
+        updateNotifyAction(playPosition);
     }
 
     //设置当前进度为true
     private boolean flag = true;
+
     public void setFlagProgress(boolean flag) {
         this.flag = flag;
     }
+
     //更新播放进度的方法
-    public void updateProgress(){
+    public void updateProgress() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (flag){
+                while (flag) {
                     long aLong = mList.get(playPosition).getDurationLong();
                     int currentPosition = mediaPlayer.getCurrentPosition();
-                    int progress = (int) (currentPosition*100/aLong);
+                    int progress = (int) (currentPosition * 100 / aLong);
                     mList.get(playPosition).setCurrentProgress(progress);
-                    handler.sendEmptyMessageDelayed(1,1000);
+                    handler.sendEmptyMessageDelayed(1, 1000);
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -136,7 +255,7 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
-            if (msg.what == 1){
+            if (msg.what == 1) {
                 notifyActivityRefreshUI();
             }
             return true;

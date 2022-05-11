@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
@@ -27,7 +27,7 @@
         android:layout_toRightOf="@id/ny_iv"
         android:layout_below="@id/ny_tv_title"
         android:layout_alignTop="@+id/ny_iv_last"
-        android:text="20220603"
+        android:text="20208695"
         android:textSize="@dimen/size_15sp"
         android:textColor="@color/black"/>
 
