@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">我的录音机</string>
+    <string name="recorder">录音机</string>
     <string name="delete">删除</string>
     <string name="rename">重命名</string>
     <string name="information">查看详情</string>

@@ -15,9 +15,11 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 
 import com.yyzy.soundrecorder.R;
 import com.yyzy.soundrecorder.entity.AudioEntity;
@@ -38,8 +40,8 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
     private final String PRE_ACTION_CLOSE = "com.yyzy.close";
     private final String PRE_ACTION_NEXT = "com.yyzy.next";
     private final String PRE_ACTION_LAST = "com.yyzy.last";
-    private Notification notification;
-
+    private Notification notification = null;
+    //private Notification notification;
 
     @Override
     public void onCreate() {
@@ -88,36 +90,99 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
     private void notifyUIControl(String action) {
         switch (action) {
             case PRE_ACTION_PLAY:
-
+                startOrStopMusic();
                 break;
             case PRE_ACTION_CLOSE:
-
+                closeNotification();
                 break;
             case PRE_ACTION_NEXT:
-
+                nextMusic();
                 break;
             case PRE_ACTION_LAST:
-
-                break;
-            default:
+                previousMusic();
                 break;
         }
+    }
+
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+        }
+        closeMusic();
+    }
+
+    //停止音乐
+    public void closeMusic() {
+        if (mediaPlayer != null) {
+            setFlagProgress(false);
+            closeNotification();
+            mediaPlayer.stop();
+            playPosition = -1;
+        }
+    }
+
+    //关闭通知
+    private void closeNotification() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            mList.get(playPosition).setPlay(false);
+        }
+        notifyActivityRefreshUI();
+        manager.cancel(NOTIFY_ID_MUSIC);
+    }
+
+    //播放下一曲
+    private void nextMusic() {
+        mList.get(playPosition).setPlay(false);
+        if (playPosition >= mList.size() - 1) {
+            playPosition = 0;
+        } else {
+            playPosition++;
+        }
+        mList.get(playPosition).setPlay(true);
+        play(playPosition);
+    }
+
+    //播放上一曲
+    private void previousMusic() {
+        mList.get(playPosition).setPlay(false);
+        if (playPosition == 0) {
+            playPosition = mList.size() - 1;
+        } else {
+            playPosition--;
+        }
+        mList.get(playPosition).setPlay(true);
+        play(playPosition);
     }
 
     //注册广播接收者，用于接受用户点击通知栏按钮发出的信息
     private void initRegisterReceiver() {
         receiver = new AudioReceiver();
         IntentFilter filter = new IntentFilter();
+        filter.addAction(PRE_ACTION_LAST);
+        filter.addAction(PRE_ACTION_NEXT);
         filter.addAction(PRE_ACTION_PLAY);
         filter.addAction(PRE_ACTION_CLOSE);
-        filter.addAction(PRE_ACTION_NEXT);
-        filter.addAction(PRE_ACTION_LAST);
         registerReceiver(receiver, filter);
+        Log.e("TAG", "initRegisterReceiver: " + "到了");
     }
 
     //设置通知栏的显示效果以及图片的点击事件
     private void initRemoView() {
         remoteView = new RemoteViews(getPackageName(), R.layout.notify_audio);
+
+        PendingIntent lastPI = PendingIntent
+                .getBroadcast(this, 1, new Intent(PRE_ACTION_LAST), PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteView.setOnClickPendingIntent(R.id.ny_iv_last, lastPI);
+
+        PendingIntent nextPI = PendingIntent
+                .getBroadcast(this, 1, new Intent(PRE_ACTION_NEXT), PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteView.setOnClickPendingIntent(R.id.ny_iv_next, nextPI);
+
         PendingIntent playPI = PendingIntent
                 .getBroadcast(this, 1, new Intent(PRE_ACTION_PLAY), PendingIntent.FLAG_UPDATE_CURRENT);
         remoteView.setOnClickPendingIntent(R.id.ny_iv_play, playPI);
@@ -125,15 +190,6 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
         PendingIntent closePI = PendingIntent
                 .getBroadcast(this, 1, new Intent(PRE_ACTION_CLOSE), PendingIntent.FLAG_UPDATE_CURRENT);
         remoteView.setOnClickPendingIntent(R.id.ny_iv_close, closePI);
-
-        PendingIntent nextPI = PendingIntent
-                .getBroadcast(this, 1, new Intent(PRE_ACTION_NEXT), PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteView.setOnClickPendingIntent(R.id.ny_iv_next, nextPI);
-
-        PendingIntent lastPI = PendingIntent
-                .getBroadcast(this, 1, new Intent(PRE_ACTION_LAST), PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteView.setOnClickPendingIntent(R.id.ny_iv_last, lastPI);
-
     }
 
     public interface OnPlayChangeListener {
@@ -158,7 +214,8 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-
+        //当前音乐播放完成直接
+        nextMusic();
     }
 
     public class AudioBinder extends Binder {

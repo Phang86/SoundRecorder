@@ -14,10 +14,13 @@
         android:roundIcon="@mipmap/icon_app_logo"
         android:supportsRtl="true"
         android:theme="@style/myStyle">
+        <activity android:name=".activity.RecorderActivity"
+            android:exported="true" />
+
         <service
             android:name=".service.AudioService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".activity.AudioListActivity"

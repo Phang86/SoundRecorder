@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -39,12 +40,13 @@
         android:layout_alignParentRight="true"/>
 
     <ImageView
-        android:id="@+id/ny_iv_next"
+        android:id="@+id/ny_iv_last"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@mipmap/icon_next"
-        android:layout_alignBottom="@id/ny_iv"
-        android:layout_toLeftOf="@id/ny_iv_close"/>
+        android:background="@mipmap/icon_last"
+        android:layout_alignTop="@id/ny_iv_next"
+        android:layout_toLeftOf="@id/ny_iv_play"
+        android:layout_marginRight="@dimen/dimen_10dp"/>
 
     <ImageView
         android:id="@+id/ny_iv_play"
@@ -56,11 +58,10 @@
         android:layout_marginRight="@dimen/dimen_10dp"/>
 
     <ImageView
-        android:id="@+id/ny_iv_last"
+        android:id="@+id/ny_iv_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@mipmap/icon_last"
-        android:layout_alignTop="@id/ny_iv_next"
-        android:layout_toLeftOf="@id/ny_iv_play"
-        android:layout_marginRight="@dimen/dimen_10dp"/>
+        android:background="@mipmap/icon_next"
+        android:layout_alignBottom="@id/ny_iv"
+        android:layout_toLeftOf="@id/ny_iv_close"/>
 </RelativeLayout>

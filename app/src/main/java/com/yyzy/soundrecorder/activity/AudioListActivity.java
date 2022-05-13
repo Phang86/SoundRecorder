@@ -118,6 +118,14 @@ public class AudioListActivity extends AppCompatActivity {
                 return false;
             }
         });
+        binding.audioIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                audioService.closeMusic();
+                startActivity(new Intent(AudioListActivity.this,RecorderActivity.class));
+                finish();
+            }
+        });
     }
 
     //长按每一项item弹出popmenu窗口
