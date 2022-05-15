@@ -14,8 +14,15 @@
         android:roundIcon="@mipmap/icon_app_logo"
         android:supportsRtl="true"
         android:theme="@style/myStyle">
-        <activity android:name=".activity.RecorderActivity"
-            android:exported="true" />
+        <service
+            android:name=".service.RecorderService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity
+            android:name=".activity.RecorderActivity"
+            android:exported="true"
+            android:launchMode="singleTask"/>
 
         <service
             android:name=".service.AudioService"

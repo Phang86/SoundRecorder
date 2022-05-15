@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import com.yyzy.soundrecorder.util.ContantUtils;
 import com.yyzy.soundrecorder.util.DialogUtils;
 import com.yyzy.soundrecorder.util.InfoDialog;
 import com.yyzy.soundrecorder.util.RenameDialog;
+import com.yyzy.soundrecorder.util.StartSystemPageUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -89,6 +91,15 @@ public class AudioListActivity extends AppCompatActivity {
         super.onDestroy();
         //当活动销毁则解绑服务
         unbindService(connection);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            StartSystemPageUtils.goToHomePage(this);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void setEvents() {

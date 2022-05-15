@@ -214,7 +214,7 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        //当前音乐播放完成直接
+        //当前音乐播放完成切换到下一曲
         nextMusic();
     }
 

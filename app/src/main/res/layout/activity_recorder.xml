@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.RecorderActivity"
-    android:background="@color/grey">
+    android:background="@color/grey"
+    tools:context=".activity.RecorderActivity">
 
     <RelativeLayout
         android:id="@+id/top"
@@ -13,32 +13,34 @@
         android:layout_height="@dimen/dimen_50dp">
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_back"
             android:layout_margin="@dimen/dimen_10dp"
-            android:onClick="back"/>
+            android:onClick="onClick"
+            android:src="@mipmap/icon_back" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/recorder"
+            android:textColor="@color/black"
             android:textSize="@dimen/size_20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"/>
+            android:textStyle="bold" />
     </RelativeLayout>
+
     <com.carlos.voiceline.mylibrary.VoiceLineView
         android:id="@+id/voicLine"
         android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_height="@dimen/dimen_267dp"
         android:layout_below="@+id/top"
+        android:layout_marginBottom="@dimen/dimen_20dp"
         android:background="@android:color/white"
+        app:fineness="three"
         app:maxVolume="200"
         app:middleLine="@android:color/holo_red_light"
         app:middleLineHeight="1dp"
-        app:fineness="three"
         app:rectSpace="2dp"
         app:rectWidth="5dp"
         app:sensibility="four"
@@ -46,20 +48,23 @@
         app:voiceLine="@android:color/holo_blue_dark" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/voicLine"
-        android:text="00:00:09"
         android:gravity="center_horizontal"
+        android:padding="@dimen/dimen_10dp"
+        android:text="00:00:00"
         android:textColor="@color/black"
-        android:textSize="30sp"
-        android:padding="@dimen/dimen_10dp" />
+        android:textSize="30sp" />
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_stop"
         android:layout_width="@dimen/dimen_35dp"
         android:layout_height="@dimen/dimen_35dp"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/dimen_20dp"
-        android:src="@mipmap/red_stop" />
+        android:src="@mipmap/red_stop"
+        android:onClick="onClick"/>
 </RelativeLayout>
